@@ -13,6 +13,7 @@
     SecurityGroupIds: "{{ SecurityGroupIds }}"
     ImageID: "{{ ImageID }}"
     SubnetID: "{{ SubnetID }}"
+    cf: "{{ stack_info.cloudformation }}.{{ stack_name }}"
   tasks:
   - name: create cloudformation stack {{ stack_name }}
     amazon.aws.cloudformation:
@@ -36,7 +37,7 @@
     register: stack_info
   - name: Print Stack Outputs
     debug: 
-      var: stack_info.cloudformation
+      var: cf.stack_outputs
       #msg: "Stack Output: {{ item }}"
     #loop: "{{ stack_info.stacks[0].outputs }}"
     #when: stack_info.stacks | length > 0
