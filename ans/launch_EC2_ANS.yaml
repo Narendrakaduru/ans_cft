@@ -32,7 +32,7 @@
           StackName: "{{ stack_name }}"
     - name: Get CloudFormation Stack Outputs
       aws.cloudformation_info:
-        stack_name: YourStackName
+        stack_name: "{{ stack_name }}"
       register: stack_info
 
     - name: Print Stack Outputs
