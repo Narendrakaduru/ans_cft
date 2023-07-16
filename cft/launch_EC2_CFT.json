@@ -32,8 +32,6 @@
 			"Properties" : {
 				"InstanceType" : { "Ref" : "InstanceType" },
 				"NetworkInterfaces" : [{
-					"AssociatePublicIpAddresses" : "true",
-					"DeviceIndex" : "0",
 					"SubnetID" : { "Ref" : "SubnetID" },
 					"GroupSet" : { "Ref" : "SecurityGroupIds" }
 				}],
