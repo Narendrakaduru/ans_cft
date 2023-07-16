@@ -31,6 +31,7 @@
 			"Type" : "AWS::EC2::Instance",
 			"Properties" : {
 				"InstanceType" : { "Ref" : "InstanceType" },
+				"KeyName" : "nv-test-0523",
 				"NetworkInterfaces" : [{
 					"AssociatePublicIpAddresses" : "true",
 					"DeviceIndex" : "0",
