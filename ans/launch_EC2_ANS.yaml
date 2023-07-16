@@ -30,6 +30,10 @@
         SubnetID: "{{ SubnetID }}"
       tags:
         StackName: "{{ stack_name }}"
+  - name: Wait for SSH connection
+      wait_for_connection:
+        delay: 3
+        timeout: 300
   - name: Get CloudFormation Stack Outputs
     amazon.aws.cloudformation_info:
       stack_name: "{{ stack_name }}"
@@ -37,6 +41,3 @@
   - name: Print Stack Outputs
     debug: 
       var: cf.cloudformation['{{ stack_name }}'].stack_outputs
-      #msg: "Stack Output: {{ item }}"
-    #loop: "{{ stack_info.stacks[0].outputs }}"
-    #when: stack_info.stacks | length > 0
