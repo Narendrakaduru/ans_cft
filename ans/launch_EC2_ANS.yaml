@@ -14,29 +14,28 @@
     ImageID: "{{ ImageID }}"
     SubnetID: "{{ SubnetID }}"
   tasks:
-    - name: create cloudformation stack {{ stack_name }}
-      amazon.aws.cloudformation:
-        stack_name: "{{ stack_name }}"
-        state: present
-        region: "{{ region }}"
-        disable_rollback: true
-        template: "{{ template }}"
-        template_parameters:
-          UserID: "{{ UserID }}"
-          InstanceName: "{{ InstanceName }}"
-          InstanceType: "{{ InstanceType }}"
-          SecurityGroupIds: "{{ SecurityGroupIds }}"
-          ImageID: "{{ ImageID }}"
-          SubnetID: "{{ SubnetID }}"
-        tags:
-          StackName: "{{ stack_name }}"
-    - name: Get CloudFormation Stack Outputs
-      aws.cloudformation_info:
-        stack_name: "{{ stack_name }}"
-      register: stack_info
-
-    - name: Print Stack Outputs
-      debug:
-        msg: "Stack Output: {{ item }}"
-      loop: "{{ stack_info.stacks[0].outputs }}"
-      when: stack_info.stacks | length > 0
+  - name: create cloudformation stack {{ stack_name }}
+    amazon.aws.cloudformation:
+      stack_name: "{{ stack_name }}"
+      state: present
+      region: "{{ region }}"
+      disable_rollback: true
+      template: "{{ template }}"
+      template_parameters:
+        UserID: "{{ UserID }}"
+        InstanceName: "{{ InstanceName }}"
+        InstanceType: "{{ InstanceType }}"
+        SecurityGroupIds: "{{ SecurityGroupIds }}"
+        ImageID: "{{ ImageID }}"
+        SubnetID: "{{ SubnetID }}"
+      tags:
+        StackName: "{{ stack_name }}"
+  - name: Get CloudFormation Stack Outputs
+    aws.cloudformation_info:
+      stack_name: "{{ stack_name }}"
+    register: stack_info
+  - name: Print Stack Outputs
+    debug:
+      msg: "Stack Output: {{ item }}"
+    loop: "{{ stack_info.stacks[0].outputs }}"
+    when: stack_info.stacks | length > 0
