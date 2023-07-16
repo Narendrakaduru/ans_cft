@@ -23,7 +23,7 @@
 		},
 		"SubnetID" : {
 			"Description" : "the subnet ID to use",
-			"Type" : "AWS::EC2::Subnet::Id",
+			"Type" : "AWS::EC2::Subnet::Id"
 		}
 	},
 	"Resources" : {
