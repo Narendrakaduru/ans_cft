@@ -23,20 +23,21 @@
 		},
 		"SubnetID" : {
 			"Description" : "the subnet ID to use",
-			"Type" : "AWS::EC2::Subnet::Id"
+			"Type" : "AWS::EC2::Subnet::Id",
 		}
 	},
 	"Resources" : {
 		"EC2Instance" : {
 			"Type" : "AWS::EC2::Instance",
 			"Properties" : {
-				"ImageID" : { "Ref" : "ImageID" },
 				"InstanceType" : { "Ref" : "InstanceType" },
-				"KeyName": "nv-test-0523",
 				"NetworkInterfaces" : [{
+					"AssociatePublicIpAddresses" : "true",
+					"DeviceIndex" : "0",
 					"SubnetID" : { "Ref" : "SubnetID" },
 					"GroupSet" : { "Ref" : "SecurityGroupIds" }
 				}],
+				"ImageID" : { "Ref" : "ImageID" },
 				"Tags" : [
 				{
 					"Key" : "UserID",
@@ -72,10 +73,6 @@
 					"AvailabilityZone"
 				]
 			}
-		},
-		"PublicIP" : {
-		      "Description" : "Public IP address of the newly created EC2 instance",
-		      "Value" : { "Fn::GetAtt" : [ "EC2Instance", "PublicIp" ] }
 		}
 	}
 }
