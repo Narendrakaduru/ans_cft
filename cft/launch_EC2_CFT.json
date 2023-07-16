@@ -32,7 +32,7 @@
 			"Properties" : {
 				"ImageId" : { "Ref" : "ImageID" },
 				"InstanceType" : { "Ref" : "InstanceType" },
-				"KeyName" : "nv-test-0523",
+				"KeyName" : "nv-test-0523.pem",
 				"NetworkInterfaces" : [{
 					"AssociatePublicIpAddress" : "true",
 					"DeviceIndex" : "0",
