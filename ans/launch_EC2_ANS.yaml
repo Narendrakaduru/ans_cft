@@ -28,3 +28,12 @@
         SubnetID: "{{ SubnetID }}"
       tags:
         StackName: "{{ stack_name }}"
+  - name: Get CloudFormation Stack Outputs
+      cloudformation_facts:
+        stack_name: "{{ stack_name }}"
+      register: stack_outputs
+  - name: Print Stack Outputs
+      debug:
+        msg: "Stack Output: {{ item }}"
+      loop: "{{ stack_outputs['stacks'][0]['outputs'] }}"
+      when: stack_outputs['stacks'][0]['outputs'] is defined
