@@ -31,9 +31,9 @@
       tags:
         StackName: "{{ stack_name }}"
   - name: Wait for SSH connection
-      wait_for_connection:
-        delay: 3
-        timeout: 300
+    wait_for_connection:
+      delay: 3
+      timeout: 300
   - name: Get CloudFormation Stack Outputs
     amazon.aws.cloudformation_info:
       stack_name: "{{ stack_name }}"
