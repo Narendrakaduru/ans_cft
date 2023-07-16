@@ -33,10 +33,10 @@
   - name: Get CloudFormation Stack Outputs
     amazon.aws.cloudformation_info:
       stack_name: "{{ stack_name }}"
-    register: stack_info
+    register: cf
   - name: Print Stack Outputs
     debug:
-      var: stack_info
+      var: cf.stack_outputs
       #msg: "Stack Output: {{ item }}"
     #loop: "{{ stack_info.stacks[0].outputs }}"
     #when: stack_info.stacks | length > 0
