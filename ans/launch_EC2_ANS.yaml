@@ -36,7 +36,7 @@
     register: stack_info
   - name: Print Stack Outputs
     debug: 
-      var: stack_info.cloudformation | select('match', 'stack_outputs')
+      var: stack_info.cloudformation.stacks[0].outputs
       #msg: "Stack Output: {{ item }}"
     #loop: "{{ stack_info.stacks[0].outputs }}"
     #when: stack_info.stacks | length > 0
