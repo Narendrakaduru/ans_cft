@@ -71,6 +71,10 @@
 					"AvailabilityZone"
 				]
 			}
+		},
+		"PublicIP" : {
+		      "Description" : "Public IP address of the newly created EC2 instance",
+		      "Value" : { "Fn::GetAtt" : [ "EC2Instance", "PublicIp" ] }
 		}
 	}
 }
