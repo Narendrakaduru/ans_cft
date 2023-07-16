@@ -74,12 +74,12 @@
 				]
 			}
 		},
-		"PrivateIP" : {
+		"InstancePrivateIP" : {
 			"Description" : "PrivateIP of the newly created EC2 Instance",
 			"Value" : {
 				"Fn::GetAtt" : [
 					"EC2Instance",
-					"PrivateIP"
+					"PrivateIpAddress"
 				]
 			}
 		}
