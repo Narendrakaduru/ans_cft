@@ -36,7 +36,7 @@
     register: cf
   - name: Extract Stack Outputs
     set_fact:
-      stack_output: "{{ cf.cloudformation['{{ stack_name }}'] }}"
+      stack_output: cf.cloudformation['{{ stack_name }}']
   - name: Print Stack Outputs
     debug: 
       var: stack_output
