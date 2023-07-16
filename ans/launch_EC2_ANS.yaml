@@ -1,6 +1,8 @@
 - name: deploy a cloudformation stack
+  hosts: "{{ server }}"
   become: true
   vars: 
+    server: "{{ server }}"
     stack_name: "{{ stack_name }}"
     region: "{{ region }}"
     template: "{{ template }}"
