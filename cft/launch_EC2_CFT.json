@@ -74,15 +74,6 @@
 				]
 			}
 		},
-		"PublicIP" : {
-			"Description" : "PublicIP of the newly created EC2 Instance",
-			"Value" : {
-				"Fn::GetAtt" : [
-					"EC2Instance",
-					"PublicIP"
-				]
-			}
-		},
 		"PrivateIP" : {
 			"Description" : "PrivateIP of the newly created EC2 Instance",
 			"Value" : {
