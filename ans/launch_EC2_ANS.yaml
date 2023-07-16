@@ -18,7 +18,6 @@
       stack_name: "{{ stack_name }}"
       state: "present"
       region: "{{ region }}"
-      disable_rollback: true
       template: "{{ template }}"
       template_parameters:
         UserID: "{{ UserID }}"
