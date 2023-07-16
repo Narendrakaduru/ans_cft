@@ -36,7 +36,10 @@
     register: stack_info
   - name: Print Stack Outputs
     debug:
-      var: stack_info['outputs']
+      var: stack_info['InstanceId']
+      var: stack_info['AZ']
+      var: stack_info['PrivateIP']
+      var: stack_info['PublicIP']
       #msg: "Stack Output: {{ item }}"
     #loop: "{{ stack_info.stacks[0].outputs }}"
     #when: stack_info.stacks | length > 0
