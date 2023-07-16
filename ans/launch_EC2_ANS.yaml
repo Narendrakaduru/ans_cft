@@ -31,7 +31,7 @@
       tags:
         StackName: "{{ stack_name }}"
   - name: Get CloudFormation Stack Outputs
-    aws.cloudformation_info:
+    amazon.aws.cloudformation_info:
       stack_name: "{{ stack_name }}"
     register: stack_info
   - name: Print Stack Outputs
