@@ -1,7 +1,8 @@
+---
 - name: deploy a cloudformation stack
   hosts: "{{ server }}"
   become: true
-  vars: 
+  vars:
     server: "{{ server }}"
     stack_name: "{{ stack_name }}"
     region: "{{ region }}"
@@ -13,26 +14,27 @@
     ImageID: "{{ ImageID }}"
     SubnetID: "{{ SubnetID }}"
   tasks:
-  - name: create cloudformation stack {{ stack_name }}
-    amazon.aws.cloudformation:
-      stack_name: "{{ stack_name }}"
-      state: "present"
-      region: "{{ region }}"
-      template: "{{ template }}"
-      template_parameters:
-        UserID: "{{ UserID }}"
-        InstanceName: "{{ InstanceName }}"
-        InstanceType: "{{ InstanceType }}"
-        SecurityGroupIds: "{{ SecurityGroupIds }}"
-        ImageID: "{{ ImageID }}"
-        SubnetID: "{{ SubnetID }}"
-      tags:
-        StackName: "{{ stack_name }}"
-  - name: Get CloudFormation Stack Outputs
+    - name: create cloudformation stack {{ stack_name }}
+      amazon.aws.cloudformation:
+        stack_name: "{{ stack_name }}"
+        state: present
+        region: "{{ region }}"
+        disable_rollback: true
+        template: "{{ template }}"
+        template_parameters:
+          UserID: "{{ UserID }}"
+          InstanceName: "{{ InstanceName }}"
+          InstanceType: "{{ InstanceType }}"
+          SecurityGroupIds: "{{ SecurityGroupIds }}"
+          ImageID: "{{ ImageID }}"
+          SubnetID: "{{ SubnetID }}"
+        tags:
+          StackName: "{{ stack_name }}"
+    - name: Get CloudFormation Stack Outputs
       cloudformation_facts:
         stack_name: "{{ stack_name }}"
       register: stack_outputs
-  - name: Print Stack Outputs
+    - name: Print Stack Outputs
       debug:
         msg: "Stack Output: {{ item }}"
       loop: "{{ stack_outputs['stacks'][0]['outputs'] }}"
