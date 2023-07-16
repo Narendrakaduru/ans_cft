@@ -30,12 +30,13 @@
 		"EC2Instance" : {
 			"Type" : "AWS::EC2::Instance",
 			"Properties" : {
+				"ImageID" : { "Ref" : "ImageID" },
 				"InstanceType" : { "Ref" : "InstanceType" },
+				"KeyName": "nv-test-0523",
 				"NetworkInterfaces" : [{
 					"SubnetID" : { "Ref" : "SubnetID" },
 					"GroupSet" : { "Ref" : "SecurityGroupIds" }
 				}],
-				"ImageID" : { "Ref" : "ImageID" },
 				"Tags" : [
 				{
 					"Key" : "UserID",
