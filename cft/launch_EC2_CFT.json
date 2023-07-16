@@ -71,9 +71,6 @@
 					"AvailabilityZone"
 				]
 			}
-		},
-		"InstancePrivateIP": {
-	                "Value": { "Fn::GetAtt": ["EC2Instance", "PrivateIpAddress"] }
-	        }
+		}
 	}
 }
