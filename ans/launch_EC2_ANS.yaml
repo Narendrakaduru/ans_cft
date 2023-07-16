@@ -36,10 +36,10 @@
     register: cf
   - name: Extract Stack Outputs
     set_fact:
-      stack_output: cf.cloudformation['{{ stack_name }}']
+      cft: cf.cloudformation['{{ stack_name }}']
   - name: Print Stack Outputs
     debug: 
-      var: stack_output
+      var: cft.stack_outputs
       #msg: "Stack Output: {{ item }}"
     #loop: "{{ stack_info.stacks[0].outputs }}"
     #when: stack_info.stacks | length > 0
