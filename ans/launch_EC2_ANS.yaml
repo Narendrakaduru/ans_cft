@@ -1,0 +1,31 @@
+- name: deploy a cloudformation stack
+  hosts: "{{ server }}"
+  become: true
+  vars: 
+    server: "{{ server }}"
+    stack_name: "{{ stack_name }}"
+    region: "{{ region }}"
+    template: "{{ template }}"
+    UserID: "{{ UserID }}"
+    InstanceName: "{{ InstanceName }}"
+    InstanceType: "{{ InstanceType }}"
+    SecurityGroupIds: "{{ SecurityGroupIds }}"
+    ImageID: "{{ ImageID }}"
+    SubnetID: "{{ SubnetID }}"
+  tasks:
+  - name: create cloudformation stack {{ stack_name }}
+    amazon.aws.cloudformation:
+      stack_name: "{{ stack_name }}"
+      state: "present"
+      region: "{{ region }}"
+      disable_rollback: true
+      template: "{{ template }}"
+      template_parameters:
+        UserID: "{{ UserID }}"
+        InstanceName: "{{ InstanceName }}"
+        InstanceType: "{{ InstanceType }}"
+        SecurityGroupIds: "{{ SecurityGroupIds }}"
+        ImageID: "{{ ImageID }}"
+        SubnetID: "{{ SubnetID }}"
+      tags:
+        StackName: "{{ stack_name }}"
