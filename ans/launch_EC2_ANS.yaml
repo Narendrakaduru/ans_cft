@@ -46,6 +46,8 @@
       path: "{{ workdir }}"
       state: touch
       mode: '0766'
+      owner: nani
+      group: nani
   - name: save output to {{ stack_name }} file
     ansible.builtin.copy:
       content: cf.cloudformation['{{ stack_name }}'].stack_outputs
