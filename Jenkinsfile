@@ -4,6 +4,9 @@ pipeline {
           label 'master'
         }
     }
+    options {
+        ansiColor('xterm')
+    }
     stages {
         stage('Checkout code from SCM') {
 			steps{
@@ -27,12 +30,20 @@ pipeline {
 			}
 		}
 		stage('Launch CFT') {
-            steps {
+		    
+            steps {   
                 sh '''
                 whoami
-		// EXTRA_VARS
-		// server=$server stack_name=$stack_name region=$region UserID=$UserID InstanceName=$InstanceName InstanceType=$InstanceType SecurityGroupIds=$SecurityGroupIds ImageID=$ImageID SubnetID=$SubnetID
-                ansible-playbook -i /etc/ansible/hosts ${WORKSPACE}/ans/launch_EC2_ANS.yaml --extra-vars "$EXTRA_VARS template=$WORKSPACE/$template"
+                ansible-playbook -i /etc/ansible/hosts ${WORKSPACE}/ans/launch_EC2_ANS.yaml --extra-vars "$EXTRA_VARS workdir=$WORKSPACE/$stack_name.txt template=$WORKSPACE/$template"
+                '''
+		    }
+        }
+        stage('Initialize new server'){
+            steps {
+                sh '''
+                cd $WORKSPACE
+                PublicIP=`cat ${stack_name}.txt | grep -w "PublicIP" | awk -F":" '{ print $2 }' | awk -F'"' '{ print $2 }'`
+                echo $PublicIP
                 '''
             }
         }
