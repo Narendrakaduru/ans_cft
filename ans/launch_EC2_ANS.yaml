@@ -41,6 +41,7 @@
   - name: Print Stack Outputs
     debug: 
       var: cf.cloudformation['{{ stack_name }}'].stack_outputs
+    register: cft_out
   - name: Create file with {{ stack_name }} to store stack outputs
     file:
       path: "{{ workdir }}"
@@ -50,6 +51,6 @@
       group: nani
   - name: save output to {{ stack_name }} file
     ansible.builtin.copy:
-      content: cf.cloudformation['{{ stack_name }}'].stack_outputs.stdout
+      content: cft_out.stdout
       dest: "{{ workdir }}"
     delegate_to: "{{ server }}"
