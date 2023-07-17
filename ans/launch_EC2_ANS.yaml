@@ -51,6 +51,7 @@
       group: nani
   - name: save output to {{ stack_name }} file
     ansible.builtin.copy:
+    debug:
       content: cft_out
       dest: "{{ workdir }}"
     delegate_to: "{{ server }}"
