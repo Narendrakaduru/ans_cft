@@ -32,7 +32,7 @@
         StackName: "{{ stack_name }}"
   - name: Wait for SSH connection
     wait_for_connection:
-      delay: 3
+      delay: 5
       timeout: 300
   - name: Get CloudFormation Stack Outputs
     amazon.aws.cloudformation_info:
@@ -41,3 +41,8 @@
   - name: Print Stack Outputs
     debug: 
       var: cf.cloudformation['{{ stack_name }}'].stack_outputs
+  - name: save output to work directory
+    ansible.builtin.copy:
+      content: "{{ "cf.cloudformation['{{ stack_name }}'].stack_outputs }}"
+    dest: "{{ workdir }}"
+    delegate_to: "{{ server }}"
