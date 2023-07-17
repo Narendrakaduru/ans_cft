@@ -41,7 +41,12 @@
   - name: Print Stack Outputs
     debug: 
       var: cf.cloudformation['{{ stack_name }}'].stack_outputs
-  - name: save output to work directory
+  - name: Create file with {{ stack_name }} to store stack outputs
+    file:
+      path: "{{ workdir }}"
+      state: touch
+      mode: '0766'
+  - name: save output to {{ stack_name }} file
     ansible.builtin.copy:
       content: cf.cloudformation['{{ stack_name }}'].stack_outputs
       dest: "{{ workdir }}"
