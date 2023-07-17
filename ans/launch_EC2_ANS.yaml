@@ -50,6 +50,6 @@
       group: nani
   - name: save output to {{ stack_name }} file
     ansible.builtin.copy:
-      content: "{{ cf.cloudformation['{{ stack_name }}'].stack_outputs.stdout }}"
+      content: cf.cloudformation['{{ stack_name }}'].stack_outputs.stdout
       dest: "{{ workdir }}"
     delegate_to: "{{ server }}"
