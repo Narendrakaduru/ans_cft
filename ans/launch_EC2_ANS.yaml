@@ -43,6 +43,6 @@
       var: cf.cloudformation['{{ stack_name }}'].stack_outputs
   - name: save output to work directory
     ansible.builtin.copy:
-      content: "{{ "cf.cloudformation['{{ stack_name }}'].stack_outputs }}"
+      content: "{{ cf.cloudformation['{{ stack_name }}'].stack_outputs }}"
     dest: "{{ workdir }}"
     delegate_to: "{{ server }}"
