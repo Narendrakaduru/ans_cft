@@ -38,10 +38,6 @@
     amazon.aws.cloudformation_info:
       stack_name: "{{ stack_name }}"
     register: cf
-  - name: Print Stack Outputs
-    debug: 
-      var: cf.cloudformation['{{ stack_name }}'].stack_outputs
-    register: cft_out
   - name: Create file with {{ stack_name }} to store stack outputs
     file:
       path: "{{ workdir }}"
@@ -49,9 +45,12 @@
       mode: '0766'
       owner: nani
       group: nani
+  - name: Print Stack Outputs
+    debug: 
+      var: cf.cloudformation['{{ stack_name }}'].stack_outputs
+    register: cft_out
   - name: save output to {{ stack_name }} file
     ansible.builtin.copy:
-    debug:
-      content: cft_out
+      content: "{{ cft_out | to_nice_json }}"
       dest: "{{ workdir }}"
     delegate_to: "{{ server }}"
