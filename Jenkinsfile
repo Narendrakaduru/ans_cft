@@ -30,6 +30,8 @@ pipeline {
             steps {
                 sh '''
                 whoami
+		// EXTRA_VARS
+		// server=$server stack_name=$stack_name region=$region UserID=$UserID InstanceName=$InstanceName InstanceType=$InstanceType SecurityGroupIds=$SecurityGroupIds ImageID=$ImageID SubnetID=$SubnetID
                 ansible-playbook -i /etc/ansible/hosts ${WORKSPACE}/ans/launch_EC2_ANS.yaml --extra-vars "$EXTRA_VARS template=$WORKSPACE/$template"
                 '''
             }
