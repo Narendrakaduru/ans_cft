@@ -41,8 +41,8 @@ pipeline {
             steps {
                 sh '''
                 cd $WORKSPACE
-                PublicIP=`cat ${stack_name}.txt | grep -w "PublicIP" | awk -F":" '{ print $2 }' | awk -F'"' '{ print $2 }'`
-                echo $PublicIP
+                new_public_ip=`cat ${stack_name}.txt | grep -w "PublicIP" | awk -F":" '{ print $2 }' | awk -F'"' '{ print $2 }'`
+                echo $new_public_ip
                 '''
             }
         }

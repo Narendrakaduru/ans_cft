@@ -1,0 +1,12 @@
+- name: deploy a cloudformation stack
+  hosts: "{{ server }}"
+  become: true
+  vars:
+    server: "{{ server }}"
+    new_public_ip: "{{ new_public_ip }}"
+    new_host_group: "ec2_list"
+  tasks:
+  - name: Add host to Inventory
+    add_host:
+      name: "{{ new_public_ip }}"
+      group: "{{ new_host_group }}"
