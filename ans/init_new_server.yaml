@@ -5,29 +5,24 @@
     server: "{{ server }}"
     new_public_ip: "{{ new_public_ip }}"
     new_host_group: "ec2_list"
-    username: myuser
-    groupname: mygroup
-    home_directory: /home/myuser
+    username: nani
+    groupname: nani
+    home_directory: /home/nani
   tasks:
   - name: Add host to Inventory
     add_host:
       name: "{{ new_public_ip }}"
       group: "{{ new_host_group }}"
       ansible_host: "{{ new_public_ip }}"
-  - name: Copy id_rsa.pub to remote host
-    become: true
-    become_user: ec2-user
-    copy:
-      src: /home/nani/.ssh/id_rsa.pub
-      dest: /home/nani/.ssh/authorized_keys
-      mode: 0600
-    delegate_to: "{{ new_public_ip }}"
+
   - name: Create group
+    hosts: "{{ new_host_group }}"
     group:
       name: "{{ groupname }}"
       state: present
-    delegate_to: "{{ new_public_ip }}"
+
   - name: Create user
+    hosts: "{{ new_host_group }}"
     user:
       name: "{{ username }}"
       group: "{{ groupname }}"
@@ -35,6 +30,18 @@
       home: "{{ home_directory }}"
       shell: /bin/bash
       state: present
-    delegate_to: "{{ new_public_ip }}"
+
+  - name: Copy id_rsa.pub to remote host
+    hosts: "{{ new_host_group }}"
+    become: true
+    become_user: ec2-user
+    copy:
+      src: /home/nani/.ssh/id_rsa.pub
+      dest: /home/nani/.ssh/authorized_keys
+      mode: 0600
+
+
+
+
 
 
