@@ -4,6 +4,10 @@
   vars:
     new_public_ip: "{{ new_public_ip }}"
   tasks:
+  - name: Install GrowPart
+    yum:
+      name: cloud-utils-growpart
+      state: present
   - name: Create partition 1
     parted:
       device: /dev/xvda
