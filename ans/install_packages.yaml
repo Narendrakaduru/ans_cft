@@ -8,14 +8,21 @@
     ansible.builtin.apt:
       name: "*"
       state: latest
-  - name: Install latest version of "openjdk-17-jdk" ignoring "install-recommends"
-    ansible.builtin.apt:
-      name: openjdk-17-jdk
-      state: latest
-      install_recommends: no
+  - name: Install Java 17
+    package:
+      name: java-17-openjdk-devel
+      state: present
   - name: Update bashrc to export Java variables
-    lineinfile:
-      dest: ~/.bashrc
-      line: |
-        export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+    blockinfile:
+      path: ~/.bashrc
+      marker: "# {mark} ANSIBLE MANAGED BLOCK - JAVA VARIABLES"
+      block: |
+        export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
         export PATH=$JAVA_HOME/bin:$PATH
+    notify: Reload bashrc
+  - name: Reload bashrc
+    shell: source ~/.bashrc
+    args:
+      executable: /bin/bash
+    when: ansible_check_mode
+
