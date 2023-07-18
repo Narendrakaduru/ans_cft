@@ -9,6 +9,17 @@
       name: lvm2
       state: present
 
+  - name: Create physical volume
+    lvol:
+      vg: vgroot
+      pv: /dev/xvda1
+
+  - name: Create volume group
+    lvol:
+      vg: vgroot
+      pesize: 4
+      devices: /dev/xvda1
+
   - name: Create root logical volume
     lvol:
       vg: vgroot
