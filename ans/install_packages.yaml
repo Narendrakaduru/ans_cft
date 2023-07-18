@@ -5,7 +5,7 @@
     new_public_ip: "{{ new_public_ip }}"
   tasks:
   - name: Update all packages to their latest version
-    ansible.builtin.apt:
+    yum:
       name: "*"
       state: latest
   - name: Install Java 17
