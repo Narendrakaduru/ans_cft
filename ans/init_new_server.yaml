@@ -11,28 +11,6 @@
       line: "{{ new_public_ip }}"
       insertafter: "{{ '^\\[ec2_list\\]$' }}"
 
-- name: Create new group on the new host
-  hosts: "{{ new_public_ip }}"
-  become: true
-  vars:
-    new_public_ip: "{{ new_public_ip }}"
-    username: hari
-    groupname: hari
-    home_directory: /home/hari
-  tasks:
-  - name: Create group
-    group:
-      name: "{{ groupname }}"
-      state: present
-  - name: Create user
-    user:
-      name: "{{ username }}"
-      group: "{{ groupname }}"
-      createhome: yes
-      home: "{{ home_directory }}"
-      shell: /bin/bash
-      state: present
-
 
 
 
