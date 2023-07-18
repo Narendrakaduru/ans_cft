@@ -19,6 +19,7 @@
 - name: Create new group on the new host
   hosts: "{{ new_public_ip }}"
   become: true
+  become_user: ec2-user
   vars:
     username: nani
     groupname: nani
