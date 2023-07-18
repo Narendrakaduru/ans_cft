@@ -9,12 +9,13 @@
       path: /etc/ansible/hosts
       line: "{{ new_public_ip }}"
       insertafter: "{{ '^\\[ec2_list\\]$' }}"
-
+---
 - name: Create new group on the new host
   hosts: "{{ new_public_ip }}"
   become: true
   become_user: ec2-user
   vars:
+    new_public_ip: "{{ new_public_ip }}"
     username: hari
     groupname: hari
     home_directory: /home/hari
