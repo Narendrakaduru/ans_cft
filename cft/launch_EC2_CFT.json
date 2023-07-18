@@ -33,6 +33,14 @@
 				"ImageId" : { "Ref" : "ImageID" },
 				"InstanceType" : { "Ref" : "InstanceType" },
 				"KeyName" : "nv-test-0523",
+				"UserData": {
+					"Fn::Base64": {
+						"Fn::Sub": [
+							"#!/bin/bash\nuseradd nani\necho \"nani:6264\" | chpasswd\necho \"nani\tALL=(ALL) NOPASSWD:ALL\" >> /etc/sudoers\necho \"PubkeyAuthentication yes\" >> /etc/ssh/sshd_config\necho \"PasswordAuthentication yes\" >> /etc/ssh/sshd_config\nsudo service ssh restart\n",
+							{}
+						]
+					}
+				},
 				"NetworkInterfaces" : [{
 					"AssociatePublicIpAddress" : "true",
 					"DeviceIndex" : "0",
