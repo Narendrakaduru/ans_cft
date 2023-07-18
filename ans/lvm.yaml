@@ -4,26 +4,6 @@
   vars:
     new_public_ip: "{{ new_public_ip }}"
   tasks:
-  - name: Create partition 1
-    command: |
-      echo -e "n\np\n1\n\n+1G\nw" | fdisk /dev/xvda
-
-  - name: Run partprobe
-    command: partprobe /dev/xvda
-    changed_when: false
-
-  - name: Format partition 1
-    filesystem:
-      fstype: ext4
-      dev: /dev/xvda1
-
-  - name: Mount partition 1
-    mount:
-      path: /boot
-      src: /dev/xvda1
-      fstype: ext4
-      state: mounted
-
   - name: Create root logical volume
     lvol:
       vg: vgroot
