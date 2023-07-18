@@ -40,9 +40,9 @@
 				"UserData": {
 					"Fn::Base64": {
 					  "Fn::Sub": [
-						"#!/bin/bash\nuseradd nani\necho \"nani:6264\" | chpasswd\necho \"nani\tALL=(ALL) NOPASSWD:ALL\" >> /etc/sudoers\necho \"PubkeyAuthentication yes\" >> /etc/ssh/sshd_config\necho \"PasswordAuthentication yes\" >> /etc/ssh/sshd_config\nsudo service ssh restart\nmkdir /home/nani/.ssh\necho \"${PublicKey}\" >> /home/nani/.ssh/authorized_keys",
+						"#!/bin/bash\nuseradd nani\necho \"nani:6264\" | chpasswd\necho \"nani\tALL=(ALL) NOPASSWD:ALL\" >> /etc/sudoers\necho \"PubkeyAuthentication yes\" >> /etc/ssh/sshd_config\necho \"PasswordAuthentication yes\" >> /etc/ssh/sshd_config\nsudo service ssh restart\nmkdir /home/nani/.ssh\necho \"${PublicKeyParameter}\" >> /home/nani/.ssh/authorized_keys",
 						{
-						  "PublicKey": { "Ref": "PublicKeyParameter" }
+						  "PublicKeyParameter": { "Ref": "PublicKeyParameter" }
 						}
 					  ]
 					}
