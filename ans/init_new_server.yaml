@@ -5,13 +5,10 @@
     server: "{{ server }}"
   tasks:
   - name: Add host to Inventory
-    add_host:
-      name: "{{ new_public_ip }}"
-      group: "{{ new_host_group }}"
-      ansible_host: "{{ new_public_ip }}"
-    vars:
-      new_public_ip: "{{ new_public_ip }}"
-      new_host_group: "ec2_lists"
+    lineinfile:
+      path: /etc/ansible/hosts
+      insertafter: "^[ec2_list]$"
+      line: "{{ new_public_ip }}"
 
 - name: Create new group on the new host
   hosts: "{{ new_public_ip }}"
