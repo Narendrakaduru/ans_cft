@@ -1,0 +1,21 @@
+- name: Install Packages on the new Server
+  hosts: "{{ new_public_ip }}"
+  become: true
+  vars:
+    new_public_ip: "{{ new_public_ip }}"
+  tasks:
+  - name: Update all packages to their latest version
+    ansible.builtin.apt:
+      name: "*"
+      state: latest
+  - name: Install latest version of "openjdk-17-jdk" ignoring "install-recommends"
+    ansible.builtin.apt:
+      name: openjdk-17-jdk
+      state: latest
+      install_recommends: no
+  - name: Update bashrc to export Java variables
+    lineinfile:
+      dest: ~/.bashrc
+      line: |
+        export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+        export PATH=$JAVA_HOME/bin:$PATH
