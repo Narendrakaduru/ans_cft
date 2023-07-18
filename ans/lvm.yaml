@@ -10,7 +10,6 @@
       number: 1
       state: present
       align: optimal
-      size: 1GiB
 
   - name: Create partition 2
     parted:
@@ -18,7 +17,10 @@
       number: 2
       state: present
       align: optimal
-      size: 6GiB
+
+  - name: Run partprobe
+    command: partprobe /dev/nvme0n1
+    changed_when: false
 
   - name: Format partition 1
     filesystem:
