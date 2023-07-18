@@ -3,9 +3,6 @@
   become: true
   vars:
     server: "{{ server }}"
-    username: hari
-    groupname: hari
-    home_directory: /home/nani
   tasks:
   - name: Add host to Inventory
     add_host:
@@ -21,9 +18,9 @@
   become: true
   become_user: ec2-user
   vars:
-    username: nani
-    groupname: nani
-    home_directory: /home/nani
+    username: hari
+    groupname: hari
+    home_directory: /home/hari
   tasks:
   - name: Create group
     group:
@@ -37,17 +34,6 @@
       home: "{{ home_directory }}"
       shell: /bin/bash
       state: present
-- name: Copy id_rsa.pub to remote host
-  hosts: "{{ server }}"
-  become: true
-  vars:
-    server: "{{ server }}"
-  tasks:
-  - name: Copy id_rsa.pub to remote host
-    copy:
-      src: /home/nani/.ssh/id_rsa.pub
-      dest: /home/nani/.ssh/authorized_keys
-      mode: 0600
 
 
 
