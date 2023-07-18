@@ -3,8 +3,6 @@
   become: true
   vars:
     server: "{{ server }}"
-    new_public_ip: "{{ new_public_ip }}"
-    new_host_group: "ec2_list"
     username: nani
     groupname: nani
     home_directory: /home/nani
@@ -14,6 +12,9 @@
       name: "{{ new_public_ip }}"
       group: "{{ new_host_group }}"
       ansible_host: "{{ new_public_ip }}"
+    vars:
+      new_public_ip: "{{ new_public_ip }}"
+      new_host_group: "ec2_lists"
   - name: Create group
     hosts: "{{ new_host_group }}"
     group:
