@@ -57,5 +57,15 @@ pipeline {
                 '''
             }
         }
+        stage('Install Packages on new server'){
+            steps {
+                sh '''
+                cd $WORKSPACE
+                new_public_ip=`cat ${stack_name}.txt | grep -w "PublicIP" | awk -F":" '{ print $2 }' | awk -F'"' '{ print $2 }'`
+                echo $new_public_ip
+                ansible-playbook -i /etc/ansible/hosts ${WORKSPACE}/ans/install_packages.yaml --extra-vars "new_public_ip=$new_public_ip"
+                '''
+            }
+        }
     }
 }
