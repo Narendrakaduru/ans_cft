@@ -10,3 +10,7 @@
     add_host:
       name: "{{ new_public_ip }}"
       group: "{{ new_host_group }}"
+      ansible_host: "{{ new_public_ip }}"
+  - name: Debug new host
+    debug:
+      var: hostvars['{{ new_public_ip }}']
