@@ -4,13 +4,15 @@
   vars:
     server: "{{ server }}"
   tasks:
+  - name: Find line index matching pattern
+    command: awk '/^\\[ec2_list\\]$/{ print NR; exit }' /etc/ansible/hosts
+    register: line_number
   - name: Add host to Inventory
     lineinfile:
       path: /etc/ansible/hosts
-      insertafter: "{{ '^\\[ec2_list\\]$' }}"
-      regexp: "^\\[ec2_list\\]$"
+      regexp: '^\\[ec2_list\\]$'
       line: "{{ new_public_ip }}"
-
+      insertafter: "{{ line_number.stdout }}"
 - name: Create new group on the new host
   hosts: "{{ new_public_ip }}"
   become: true
