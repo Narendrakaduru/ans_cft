@@ -1,9 +1,14 @@
 - name: Configure disk and partitions
   hosts: "{{ new_public_ip }}"
-  become: yes
+  become: true
   vars:
     new_public_ip: "{{ new_public_ip }}"
   tasks:
+  - name: Install LVM tools
+    apt:
+      name: lvm2
+      state: present
+
   - name: Create root logical volume
     lvol:
       vg: vgroot
