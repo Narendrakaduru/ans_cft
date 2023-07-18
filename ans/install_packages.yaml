@@ -9,15 +9,15 @@
       name: "*"
       state: latest
   - name: Install Java 17
-    package:
-      name: java-17-openjdk-devel
+    yum:
+      name: java-17-amazon-corretto-devel
       state: present
   - name: Update bashrc to export Java variables
     blockinfile:
       path: ~/.bashrc
       marker: "# {mark} ANSIBLE MANAGED BLOCK - JAVA VARIABLES"
       block: |
-        export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+        export JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto
         export PATH=$JAVA_HOME/bin:$PATH
     notify: Reload bashrc
   - name: Reload bashrc
