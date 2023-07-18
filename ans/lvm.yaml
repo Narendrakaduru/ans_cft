@@ -1,51 +1,92 @@
-- name: Create LVM partition and mount
+- name: Configure disk and partitions
   hosts: "{{ new_public_ip }}"
   become: yes
   vars:
     new_public_ip: "{{ new_public_ip }}"
   tasks:
-  - name: Create partition table
+  - name: Create partition 1
     parted:
-      device: /dev/xvda
+      device: /dev/nvme0n1
       number: 1
       state: present
-      label: gpt
+      align: optimal
+      size: 1GiB
 
-  - name: Create root partition
+  - name: Create partition 2
     parted:
-      device: /dev/xvda
-      number: 1
-      state: present
-      part_end: 6GB
-
-  - name: Create var partition
-    parted:
-      device: /dev/xvda
+      device: /dev/nvme0n1
       number: 2
       state: present
-      part_start: 6GB
-      part_end: 8GB
+      align: optimal
+      size: 6GiB
 
-  - name: Format root partition
+  - name: Format partition 1
     filesystem:
       fstype: ext4
-      dev: "/dev/xvda1"
+      dev: /dev/nvme0n1p1
 
-  - name: Format var partition
+  - name: Format partition 2
     filesystem:
       fstype: ext4
-      dev: "/dev/xvda2"
+      dev: /dev/nvme0n1p2
 
-  - name: Mount root partition
+  - name: Mount partition 1
     mount:
-      path: /
-      src: "/dev/xvda1"
+      path: /boot
+      src: /dev/nvme0n1p1
       fstype: ext4
       state: mounted
 
-  - name: Mount var partition
+  - name: Create root logical volume
+    lvol:
+      vg: vgroot
+      lv: lvroot
+      size: 4g
+
+  - name: Format root logical volume
+    filesystem:
+      fstype: ext4
+      dev: /dev/mapper/vgroot-lvroot
+
+  - name: Mount root logical volume
+    mount:
+      path: /
+      src: /dev/mapper/vgroot-lvroot
+      fstype: ext4
+      state: mounted
+
+  - name: Create var logical volume
+    lvol:
+      vg: vgroot
+      lv: lvvar
+      size: 1g
+
+  - name: Format var logical volume
+    filesystem:
+      fstype: ext4
+      dev: /dev/mapper/vgroot-lvvar
+
+  - name: Mount var logical volume
     mount:
       path: /var
-      src: "/dev/xvda2"
+      src: /dev/mapper/vgroot-lvvar
+      fstype: ext4
+      state: mounted
+
+  - name: Create tmp logical volume
+    lvol:
+      vg: vgroot
+      lv: lvtmp
+      size: 1g
+
+  - name: Format tmp logical volume
+    filesystem:
+      fstype: ext4
+      dev: /dev/mapper/vgroot-lvtmp
+
+  - name: Mount tmp logical volume
+    mount:
+      path: /tmp
+      src: /dev/mapper/vgroot-lvtmp
       fstype: ext4
       state: mounted
