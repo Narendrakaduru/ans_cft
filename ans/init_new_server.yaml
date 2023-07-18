@@ -15,24 +15,23 @@
     vars:
       new_public_ip: "{{ new_public_ip }}"
       new_host_group: "ec2_lists"
-  - name: Create group
-    hosts: "{{ new_host_group }}"
-    group:
-      name: "{{ groupname }}"
-      state: present
-  - name: Create user
-    hosts: "{{ new_host_group }}"
-    user:
-      name: "{{ username }}"
-      group: "{{ groupname }}"
-      createhome: yes
-      home: "{{ home_directory }}"
-      shell: /bin/bash
-      state: present
-  - name: Copy id_rsa.pub to remote host
+  - name: Create new group on the new host
     hosts: "{{ new_host_group }}"
     become: true
-    become_user: ec2-user
+    tasks:
+    - name: Create group
+      group:
+        name: "{{ groupname }}"
+        state: present
+    - name: Create user
+      user:
+        name: "{{ username }}"
+        group: "{{ groupname }}"
+        createhome: yes
+        home: "{{ home_directory }}"
+        shell: /bin/bash
+        state: present
+  - name: Copy id_rsa.pub to remote host
     copy:
       src: /home/nani/.ssh/id_rsa.pub
       dest: /home/nani/.ssh/authorized_keys
