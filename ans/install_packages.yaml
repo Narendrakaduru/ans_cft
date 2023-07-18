@@ -20,9 +20,10 @@
         export JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto
         export PATH=$JAVA_HOME/bin:$PATH
     notify: Reload bashrc
+  handlers:
   - name: Reload bashrc
     shell: source ~/.bashrc
     args:
       executable: /bin/bash
-    when: ansible_check_mode
+    listen: Reload bashrc
 
