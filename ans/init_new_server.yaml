@@ -3,8 +3,8 @@
   become: true
   vars:
     server: "{{ server }}"
-    username: nani
-    groupname: nani
+    username: hari
+    groupname: hari
     home_directory: /home/nani
   tasks:
   - name: Add host to Inventory
