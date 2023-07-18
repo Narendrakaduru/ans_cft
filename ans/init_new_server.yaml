@@ -3,6 +3,7 @@
   become: true
   vars:
     server: "{{ server }}"
+    new_public_ip: "{{ new_public_ip }}"
   tasks:
   - name: Add host to Inventory
     lineinfile:
@@ -13,7 +14,6 @@
 - name: Create new group on the new host
   hosts: "{{ new_public_ip }}"
   become: true
-  become_user: ec2-user
   vars:
     new_public_ip: "{{ new_public_ip }}"
     username: hari
