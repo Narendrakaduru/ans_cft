@@ -1,0 +1,160 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "",
+	"Parameters" : {
+		"UserID" : {
+			"Type" : "String"
+		},
+		"InstanceName" : {
+			"Description" : "Name of Instance",
+			"Type" : "String"
+		},
+		"InstanceType" : {
+			"Description" : "Type of Instance",
+			"Type" : "String"
+		},
+		"SecurityGroupIds" : {
+			"Description" : "Security groups that can be used to access the EC2 Instances",
+			"Type" : "List<AWS::EC2::SecurityGroup::Id>"
+		},
+		"ImageID" : {
+			"Description" : "AMI ID",
+			"Type" : "AWS::EC2::Image::Id"
+		},
+		"SubnetID" : {
+			"Description" : "the subnet ID to use",
+			"Type" : "AWS::EC2::Subnet::Id"
+		},
+		"PublicKeyParameter" : {
+			"Description" : "add public key to ssh directory",
+			"Type" : "String",
+			"Default" : "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDPS6GRFCPpmoCJSg/YEHmzJ8Efa45poYTLt8UOzD+5LIa9MPPPjNxoBvZD2QqLYZ19v1cKY2J4bdf9FPGlTi0X3xFEnSSDEt9FoCqgQPdkuYjC6u1Z+mwO+VQbzvJgKSRbuCZADJB6nnrdCvHoVKJAeeHuMyZB6zrlq6gcQAmkieKtF79A0oMtMapgAvkAtC4uU+xCGM/Ddrd2rOAlGF0awTkROYCUfW0nMHD1pbl9JX3uXs6IkfRhEB5qKdvSe40IQTorF3PO6QzVH73ctLmDlc04xEbwPHjLmQoFtuofJ+lUsV1AiRPoUnAt6E4gEjUw+0w8INcrFMQKuYsTJmpwi50T3gy3ZRpZAu8USB1lgbQ8SenZPXVF68ZfHOGLAZNnfwOgs0tGagjSIq6mCFz7bozJN5gKhzvsBbP+snhB/NdXzlxHsTbocgldAbzAg006IlfJYnjHXPXeG5X3qx+EmGOlP9YtEhEI1W0DsDaxZ9rnhhj61AXdMRPbSwyWGvk= nani@jenkins"
+		},
+		"RootVolumeSize": {
+			"Description": "Size of the root volume",
+			"Type": "Number",
+			"Default": 8
+		},
+		"AdditionalVolumeSize": {
+			"Description": "Size of the additional EBS volume to attach",
+			"Type": "Number",
+			"Default": 20
+		},
+		"AdditionalVolumeType": {
+			"Description": "Type of the additional EBS volume",
+			"Type": "String",
+			"Default": "gp2"
+		}
+	},
+	"Resources" : {
+		"EC2Instance" : {
+			"Type" : "AWS::EC2::Instance",
+			"Properties" : {
+				"ImageId" : { "Ref" : "ImageID" },
+				"InstanceType" : { "Ref" : "InstanceType" },
+				"KeyName" : "nv-test-0523",
+				"BlockDeviceMappings": [
+					{
+						"DeviceName": "/dev/xvda",
+						"Ebs": {
+							"VolumeSize": { "Ref": "RootVolumeSize" },
+							"VolumeType": "gp2"
+						}
+					}
+				],
+				"UserData": {
+					"Fn::Base64": {
+					  "Fn::Sub": [
+						"#!/bin/bash\nuseradd nani\necho \"nani:6264\" | chpasswd\necho \"nani\tALL=(ALL) NOPASSWD:ALL\" >> /etc/sudoers\necho \"PubkeyAuthentication yes\" >> /etc/ssh/sshd_config\necho \"PasswordAuthentication yes\" >> /etc/ssh/sshd_config\nsudo service ssh restart\nmkdir /home/nani/.ssh\necho \"${PublicKey}\" >> /home/nani/.ssh/authorized_keys",
+						{
+						  "PublicKey": { "Ref": "PublicKeyParameter" }
+						}
+					  ]
+					}
+				},
+				"NetworkInterfaces" : [{
+					"AssociatePublicIpAddress" : "true",
+					"DeviceIndex" : "0",
+					"SubnetId" : { "Ref" : "SubnetID" },
+					"GroupSet" : { "Ref" : "SecurityGroupIds" }
+				}],
+				"Tags" : [
+				{
+					"Key" : "UserID",
+					"Value" : { "Ref" : "UserID" }
+				},
+				{
+					"Key" : "Name",
+					"Value" : { "Ref" : "InstanceName" }
+				},
+				{
+					"Key" : "Manager",
+					"Value" : "Harish Lankepalli"
+				},
+				{
+					"Key" : "Sr.Manager",
+					"Value" : "Narendra Kaduru"
+				}
+				
+				]
+			}
+		},
+		"AdditionalVolume" : {
+			"Type" : "AWS::EC2::Volume",
+			"Properties" : {
+				"AvailabilityZone" : { "Fn::GetAtt" : [ "EC2Instance", "AvailabilityZone" ] },
+				"Size" : { "Ref" : "AdditionalVolumeSize" },
+				"VolumeType" : { "Ref" : "AdditionalVolumeType" },
+				"Tags" : [
+					{
+						"Key" : "Name",
+						"Value" : { "Fn::Sub": "${InstanceName}-additional-volume" }
+					},
+					{
+						"Key" : "InstanceId",
+						"Value" : { "Ref" : "EC2Instance" }
+					}
+				]
+			}
+		},
+		"VolumeAttachment" : {
+			"Type" : "AWS::EC2::VolumeAttachment",
+			"Properties" : {
+				"InstanceId" : { "Ref" : "EC2Instance" },
+				"VolumeId" : { "Ref" : "AdditionalVolume" },
+				"Device" : "/dev/sdf"
+			}
+		}
+	},
+	"Outputs" : {
+		"InstanceId" : {
+			"Description": "InstanceID of the newly created EC2 Instance",
+			"Value" : { "Ref" : "EC2Instance" }
+		},
+		"AZ" : {
+			"Description" : "AZ of the newly created EC2 Instance",
+			"Value" : {
+				"Fn::GetAtt" : [
+					"EC2Instance",
+					"AvailabilityZone"
+				]
+			}
+		},
+		"PublicIP" : {
+		  "Description" : "Public IP address of the newly created EC2 instance",
+		  "Value" : { "Fn::GetAtt" : [ "EC2Instance", "PublicIp" ] }
+		},
+		"PrivateIP" : {
+		  "Description" : "Private IP address of the newly created EC2 instance",
+		  "Value" : { "Fn::GetAtt" : [ "EC2Instance", "PrivateIp" ] }
+		},
+		"RootVolumeId" : {
+			"Description": "Volume ID of the root volume",
+			"Value" : { "Fn::GetAtt" : [ "EC2Instance", "RootDeviceId" ] }
+		},
+		"AdditionalVolumeId" : {
+			"Description": "Volume ID of the additional EBS volume",
+			"Value" : { "Ref" : "AdditionalVolume" }
+		}
+	}
+}
