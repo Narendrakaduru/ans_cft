@@ -6,36 +6,25 @@
   tasks:
   - name: Create partition 1
     parted:
-      device: /dev/nvme0n1
+      device: /dev/xvda
       number: 1
       state: present
       align: optimal
-
-  - name: Create partition 2
-    parted:
-      device: /dev/nvme0n1
-      number: 2
-      state: present
-      align: optimal
+      size: 1GB
 
   - name: Run partprobe
-    command: partprobe /dev/nvme0n1
+    command: partprobe /dev/xvda
     changed_when: false
 
   - name: Format partition 1
     filesystem:
       fstype: ext4
-      dev: /dev/nvme0n1p1
-
-  - name: Format partition 2
-    filesystem:
-      fstype: ext4
-      dev: /dev/nvme0n1p2
+      dev: /dev/xvda1
 
   - name: Mount partition 1
     mount:
       path: /boot
-      src: /dev/nvme0n1p1
+      src: /dev/xvda1
       fstype: ext4
       state: mounted
 
