@@ -12,6 +12,7 @@
     SecurityGroupIds: "{{ SecurityGroupIds }}"
     ImageID: "{{ ImageID }}"
     SubnetID: "{{ SubnetID }}"
+    PublicKeyParameter: "{{ PublicKeyParameter }}"
   tasks:
   - name: create cloudformation stack {{ stack_name }}
     amazon.aws.cloudformation:
@@ -27,6 +28,7 @@
         SecurityGroupIds: "{{ SecurityGroupIds }}"
         ImageID: "{{ ImageID }}"
         SubnetID: "{{ SubnetID }}"
+        PublicKeyParameter: "{{ PublicKeyParameter }}"
       tags:
         StackName: "{{ stack_name }}"
   - name: Wait for SSH connection
