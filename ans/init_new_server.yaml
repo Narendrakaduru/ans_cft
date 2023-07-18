@@ -7,7 +7,8 @@
   - name: Add host to Inventory
     lineinfile:
       path: /etc/ansible/hosts
-      insertafter: "^[ec2_list]$"
+      insertafter: "{{ '^\\[ec2_list\\]$' }}"
+      regexp: "^\\[ec2_list\\]$"
       line: "{{ new_public_ip }}"
 
 - name: Create new group on the new host
