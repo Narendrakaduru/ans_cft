@@ -14,13 +14,11 @@
       name: "{{ new_public_ip }}"
       group: "{{ new_host_group }}"
       ansible_host: "{{ new_public_ip }}"
-
   - name: Create group
     hosts: "{{ new_host_group }}"
     group:
       name: "{{ groupname }}"
       state: present
-
   - name: Create user
     hosts: "{{ new_host_group }}"
     user:
@@ -30,7 +28,6 @@
       home: "{{ home_directory }}"
       shell: /bin/bash
       state: present
-
   - name: Copy id_rsa.pub to remote host
     hosts: "{{ new_host_group }}"
     become: true
