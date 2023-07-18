@@ -1,0 +1,59 @@
+- name: Create LVM partition and mount
+  hosts: "{{ new_public_ip }}"
+  become: yes
+  vars:
+    new_public_ip: "{{ new_public_ip }}"
+  tasks:
+  - name: Create root partition
+    parted:
+      device: /dev/xvda
+      number: 1
+      state: present
+      align: optimal
+      size: 6GB
+
+  - name: Create var partition
+    parted:
+      device: /dev/xvda
+      number: 2
+      state: present
+      align: optimal
+      size: 2GB
+
+  - name: Create physical volume
+    command: pvcreate /dev/xvda1 /dev/xvda2
+
+  - name: Create volume group
+    command: vgcreate vg_root /dev/xvda1 /dev/xvda2
+
+  - name: Create root logical volume
+    command: lvcreate -L 6G -n lv_root vg_root
+    register: lv_root_output
+
+  - name: Create var logical volume
+    command: lvcreate -L 2G -n lv_var vg_root
+    register: lv_var_output
+
+  - name: Format root partition
+    filesystem:
+      fstype: ext4
+      dev: "/dev/mapper/vg_root-lv_root"
+
+  - name: Format var partition
+    filesystem:
+      fstype: ext4
+      dev: "/dev/mapper/vg_root-lv_var"
+
+  - name: Mount root partition
+    mount:
+      path: /
+      src: "/dev/mapper/vg_root-lv_root"
+      fstype: ext4
+      state: mounted
+
+  - name: Mount var partition
+    mount:
+      path: /var
+      src: "/dev/mapper/vg_root-lv_var"
+      fstype: ext4
+      state: mounted
