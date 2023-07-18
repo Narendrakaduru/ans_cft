@@ -24,6 +24,14 @@
 		"SubnetID" : {
 			"Description" : "the subnet ID to use",
 			"Type" : "AWS::EC2::Subnet::Id"
+		},
+		"PublicKeyParameter": {
+			"Type": "String",
+			"Description": "Public Key to be added to authorized_keys file",
+			"MinLength": "1",
+			"MaxLength": "4096",
+			"AllowedPattern": "^[\\s\\S]*$",
+			"ConstraintDescription": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDPS6GRFCPpmoCJSg/YEHmzJ8Efa45poYTLt8UOzD+5LIa9MPPPjNxoBvZD2QqLYZ19v1cKY2J4bdf9FPGlTi0X3xFEnSSDEt9FoCqgQPdkuYjC6u1Z+mwO+VQbzvJgKSRbuCZADJB6nnrdCvHoVKJAeeHuMyZB6zrlq6gcQAmkieKtF79A0oMtMapgAvkAtC4uU+xCGM/Ddrd2rOAlGF0awTkROYCUfW0nMHD1pbl9JX3uXs6IkfRhEB5qKdvSe40IQTorF3PO6QzVH73ctLmDlc04xEbwPHjLmQoFtuofJ+lUsV1AiRPoUnAt6E4gEjUw+0w8INcrFMQKuYsTJmpwi50T3gy3ZRpZAu8USB1lgbQ8SenZPXVF68ZfHOGLAZNnfwOgs0tGagjSIq6mCFz7bozJN5gKhzvsBbP+snhB/NdXzlxHsTbocgldAbzAg006IlfJYnjHXPXeG5X3qx+EmGOlP9YtEhEI1W0DsDaxZ9rnhhj61AXdMRPbSwyWGvk= nani@jenkins"
 		}
 	},
 	"Resources" : {
@@ -33,14 +41,6 @@
 				"ImageId" : { "Ref" : "ImageID" },
 				"InstanceType" : { "Ref" : "InstanceType" },
 				"KeyName" : "nv-test-0523",
-				"PublicKeyParameter": {
-					"Type": "String",
-					"Description": "Public Key to be added to authorized_keys file",
-					"MinLength": "1",
-					"MaxLength": "4096",
-					"AllowedPattern": "^[\\s\\S]*$",
-					"ConstraintDescription": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDPS6GRFCPpmoCJSg/YEHmzJ8Efa45poYTLt8UOzD+5LIa9MPPPjNxoBvZD2QqLYZ19v1cKY2J4bdf9FPGlTi0X3xFEnSSDEt9FoCqgQPdkuYjC6u1Z+mwO+VQbzvJgKSRbuCZADJB6nnrdCvHoVKJAeeHuMyZB6zrlq6gcQAmkieKtF79A0oMtMapgAvkAtC4uU+xCGM/Ddrd2rOAlGF0awTkROYCUfW0nMHD1pbl9JX3uXs6IkfRhEB5qKdvSe40IQTorF3PO6QzVH73ctLmDlc04xEbwPHjLmQoFtuofJ+lUsV1AiRPoUnAt6E4gEjUw+0w8INcrFMQKuYsTJmpwi50T3gy3ZRpZAu8USB1lgbQ8SenZPXVF68ZfHOGLAZNnfwOgs0tGagjSIq6mCFz7bozJN5gKhzvsBbP+snhB/NdXzlxHsTbocgldAbzAg006IlfJYnjHXPXeG5X3qx+EmGOlP9YtEhEI1W0DsDaxZ9rnhhj61AXdMRPbSwyWGvk= nani@jenkins"
-				},
 				"UserData": {
 					"Fn::Base64": {
 						"Fn::Sub": [
