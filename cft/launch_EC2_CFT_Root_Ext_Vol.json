@@ -148,13 +148,10 @@
 		  "Description" : "Private IP address of the newly created EC2 instance",
 		  "Value" : { "Fn::GetAtt" : [ "EC2Instance", "PrivateIp" ] }
 		},
-		"RootVolumeId" : {
-			"Description": "Volume ID of the root volume",
-			"Value" : { "Fn::GetAtt" : [ "EC2Instance", "RootDeviceId" ] }
-		},
 		"AdditionalVolumeId" : {
 			"Description": "Volume ID of the additional EBS volume",
 			"Value" : { "Ref" : "AdditionalVolume" }
 		}
 	}
 }
+
