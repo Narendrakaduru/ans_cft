@@ -35,12 +35,12 @@
 			"Type": "Number",
 			"Default": 8
 		},
-		"AdditionalVolumeSize": {
+		"VolumeSize": {
 			"Description": "Size of the additional EBS volume to attach",
 			"Type": "Number",
-			"Default": 20
+			"Default": 10
 		},
-		"AdditionalVolumeType": {
+		"VolumeType": {
 			"Description": "Type of the additional EBS volume",
 			"Type": "String",
 			"Default": "gp2"
@@ -103,8 +103,8 @@
 			"Type" : "AWS::EC2::Volume",
 			"Properties" : {
 				"AvailabilityZone" : { "Fn::GetAtt" : [ "EC2Instance", "AvailabilityZone" ] },
-				"Size" : { "Ref" : "AdditionalVolumeSize" },
-				"VolumeType" : { "Ref" : "AdditionalVolumeType" },
+				"Size" : { "Ref" : "VolumeSize" },
+				"VolumeType" : { "Ref" : "VolumeType" },
 				"Tags" : [
 					{
 						"Key" : "Name",
