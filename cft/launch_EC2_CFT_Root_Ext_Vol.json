@@ -65,7 +65,7 @@
 				"UserData": {
 					"Fn::Base64": {
 					  "Fn::Sub": [
-						"#!/bin/bash\nuseradd nani\necho \"nani:6264\" | chpasswd\necho \"nani\tALL=(ALL) NOPASSWD:ALL\" >> /etc/sudoers\necho \"PubkeyAuthentication yes\" >> /etc/ssh/sshd_config\necho \"PasswordAuthentication yes\" >> /etc/ssh/sshd_config\nsudo service ssh restart\nmkdir /home/nani/.ssh\necho \"${PublicKey}\" >> /home/nani/.ssh/authorized_keys",
+						"#!/bin/bash\npvcreate /dev/xvda\nvgcreate myvg /dev/xvda\nlvcreate -n mylv -l 100%FREE myvg\nmkfs.ext4 /dev/myvg/mylv\nmkdir /mnt/mylv\nmount /dev/myvg/mylv /mnt/mylv\necho '/dev/myvg/mylv /mnt/mylv ext4 defaults 0 0' >> /etc/fstab\nuseradd nani\necho \"nani:6264\" | chpasswd\necho \"nani\tALL=(ALL) NOPASSWD:ALL\" >> /etc/sudoers\necho \"PubkeyAuthentication yes\" >> /etc/ssh/sshd_config\necho \"PasswordAuthentication yes\" >> /etc/ssh/sshd_config\nsudo service ssh restart\nmkdir /home/nani/.ssh\necho \"${PublicKey}\" >> /home/nani/.ssh/authorized_keys",
 						{
 						  "PublicKey": { "Ref": "PublicKeyParameter" }
 						}
@@ -148,10 +148,13 @@
 		  "Description" : "Private IP address of the newly created EC2 instance",
 		  "Value" : { "Fn::GetAtt" : [ "EC2Instance", "PrivateIp" ] }
 		},
+		"RootVolumeId" : {
+			"Description": "Volume ID of the root volume",
+			"Value" : { "Fn::GetAtt" : [ "EC2Instance", "RootDeviceId" ] }
+		},
 		"AdditionalVolumeId" : {
 			"Description": "Volume ID of the additional EBS volume",
 			"Value" : { "Ref" : "AdditionalVolume" }
 		}
 	}
 }
-
