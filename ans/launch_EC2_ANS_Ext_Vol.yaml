@@ -1,0 +1,57 @@
+- name: deploy a cloudformation stack
+  hosts: "{{ server }}"
+  become: true
+  vars:
+    server: "{{ server }}"
+    stack_name: "{{ stack_name }}"
+    region: "{{ region }}"
+    template: "{{ template }}"
+    UserID: "{{ UserID }}"
+    InstanceName: "{{ InstanceName }}"
+    InstanceType: "{{ InstanceType }}"
+    SecurityGroupIds: "{{ SecurityGroupIds }}"
+    ImageID: "{{ ImageID }}"
+    SubnetID: "{{ SubnetID }}"
+    VolumeSize: "{{ VolumeSize }}"
+  tasks:
+  - name: create cloudformation stack {{ stack_name }}
+    amazon.aws.cloudformation:
+      stack_name: "{{ stack_name }}"
+      state: present
+      region: "{{ region }}"
+      disable_rollback: true
+      template: "{{ template }}"
+      template_parameters:
+        UserID: "{{ UserID }}"
+        InstanceName: "{{ InstanceName }}"
+        InstanceType: "{{ InstanceType }}"
+        SecurityGroupIds: "{{ SecurityGroupIds }}"
+        ImageID: "{{ ImageID }}"
+        SubnetID: "{{ SubnetID }}"
+        VolumeSize: "{{ VolumeSize }}"
+      tags:
+        StackName: "{{ stack_name }}"
+  - name: Wait for SSH connection
+    wait_for_connection:
+      delay: 5
+      timeout: 300
+  - name: Get CloudFormation Stack Outputs
+    amazon.aws.cloudformation_info:
+      stack_name: "{{ stack_name }}"
+    register: cf
+  - name: Create file with {{ stack_name }} to store stack outputs
+    file:
+      path: "{{ workdir }}"
+      state: touch
+      mode: '0766'
+      owner: nani
+      group: nani
+  - name: Print Stack Outputs
+    debug:
+      var: cf.cloudformation['{{ stack_name }}'].stack_outputs
+    register: cft_out
+  - name: save output to {{ stack_name }} file
+    ansible.builtin.copy:
+      content: "{{ cft_out | to_nice_json }}"
+      dest: "{{ workdir }}"
+    delegate_to: "{{ server }}"
