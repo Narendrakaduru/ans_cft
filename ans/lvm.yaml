@@ -19,12 +19,6 @@
       path: /app
       state: directory
       mode: "0755"
-  - name: Unmount /app if it's already mounted
-    mount:
-      path: /app
-      state: unmounted
-      failed_when: false
-      ignore_errors: yes
   - name: Create a file system on the logical volume
     command: mkfs.xfs /dev/vgapp/lvapp
   - name: Get the UUID of the EBS volume
@@ -36,8 +30,4 @@
       line: "UUID={{ ebs_uuid.stdout }} /app ext4 defaults 0 0"
       create: yes
   - name: Mount the EBS volume using UUID
-    mount:
-      path: /app
-      src: "UUID={{ ebs_uuid.stdout }}"
-      fstype: xfs
-      state: mounted
+    command: mount /app
