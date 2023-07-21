@@ -31,10 +31,9 @@
   - name: Add entry to /etc/fstab
     lineinfile:
       path: /etc/fstab
-      line: "UUID={{ ebs_uuid.stdout }} /app xfs defaults 0 0"
+      line: "UUID={{ ebs_uuid.stdout }} /app xfs defaults 1 2"
       create: yes
-  handlers:
-  - name: Mount EBS volume
+  - name: Mount the EBS volume using UUID
     mount:
       path: /app
       src: "UUID={{ ebs_uuid.stdout }}"
