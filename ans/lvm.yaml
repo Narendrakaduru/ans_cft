@@ -19,6 +19,10 @@
       path: /app
       state: directory
       mode: "0755"
+  - name: Check if /app is already mounted
+    shell: "mountpoint -q /app"
+    register: mountpoint_check
+    ignore_errors: true
   - name: Create a file system on the logical volume
     command: mkfs.xfs /dev/vgapp/lvapp
   - name: Get the UUID of the EBS volume
@@ -35,3 +39,4 @@
       src: "UUID={{ ebs_uuid.stdout }}"
       fstype: xfs
       state: mounted
+    when: not mountpoint_check.failed
