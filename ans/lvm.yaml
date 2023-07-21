@@ -1,75 +1,30 @@
-- name: Configure disk and partitions
+- name: Create LVM with 100% of EBS volume and mount it
   hosts: "{{ new_public_ip }}"
   become: true
   vars:
     new_public_ip: "{{ new_public_ip }}"
   tasks:
-  - name: Install LVM tools
-    yum:
-      name: lvm2
-      state: present
-
-  - name: Create physical volume
-    lvol:
-      vg: vgroot
-      pv: /dev/xvda1
-
-  - name: Create volume group
-    lvol:
-      vg: vgroot
-      pesize: 4
-      devices: /dev/xvda1
-
-  - name: Create root logical volume
-    lvol:
-      vg: vgroot
-      lv: lvroot
-      size: 4g
-
-  - name: Format root logical volume
-    filesystem:
-      fstype: ext4
-      dev: /dev/mapper/vgroot-lvroot
-
-  - name: Mount root logical volume
+  - name: Initialize the EBS volume as a physical volume (PV)
+    command: pvcreate /dev/xvdf
+    ignore_errors: yes
+  - name: Create a new volume group (VG) using the PV
+    command: vgcreate vgapp /dev/xvdf
+    ignore_errors: yes
+  - name: Create a logical volume (LV) that uses 100% of the free space in the volume group
+    command: lvcreate -n lvapp -l 100%FREE /dev/vgapp
+    ignore_errors: yes
+  - name: Create the mount directory
+    become: yes
+    file:
+      path: /app
+      state: directory
+      mode: "0755"
+  - name: Create a file system on the logical volume
+    command: mkfs.xfs /dev/vgapp/lvapp
+  - name: Mount the logical volume to the directory
+    become: yes
     mount:
-      path: /
-      src: /dev/mapper/vgroot-lvroot
-      fstype: ext4
-      state: mounted
-
-  - name: Create var logical volume
-    lvol:
-      vg: vgroot
-      lv: lvvar
-      size: 1g
-
-  - name: Format var logical volume
-    filesystem:
-      fstype: ext4
-      dev: /dev/mapper/vgroot-lvvar
-
-  - name: Mount var logical volume
-    mount:
-      path: /var
-      src: /dev/mapper/vgroot-lvvar
-      fstype: ext4
-      state: mounted
-
-  - name: Create tmp logical volume
-    lvol:
-      vg: vgroot
-      lv: lvtmp
-      size: 1g
-
-  - name: Format tmp logical volume
-    filesystem:
-      fstype: ext4
-      dev: /dev/mapper/vgroot-lvtmp
-
-  - name: Mount tmp logical volume
-    mount:
-      path: /tmp
-      src: /dev/mapper/vgroot-lvtmp
-      fstype: ext4
+      path: /app
+      src: /dev/vgapp/lvapp
+      fstype: xfs
       state: mounted
