@@ -19,6 +19,11 @@
       path: /app
       state: directory
       mode: "0755"
+  - name: Unmount /app if it's already mounted
+    mount:
+      path: /app
+      state: unmounted
+      ignore_errors: yes
   - name: Create a file system on the logical volume
     command: mkfs.xfs /dev/vgapp/lvapp
   - name: Get the UUID of the EBS volume
