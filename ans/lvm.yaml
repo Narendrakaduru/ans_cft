@@ -34,9 +34,4 @@
       line: "UUID={{ ebs_uuid.stdout }} /app xfs defaults 0 0"
       create: yes
   - name: Mount the EBS volume using UUID
-    mount:
-      path: /app
-      src: "UUID={{ ebs_uuid.stdout }}"
-      fstype: xfs
-      state: mounted
-    when: not mountpoint_check.failed
+    command: mount /dev/vgapp/lvapp /app
