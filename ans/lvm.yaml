@@ -24,14 +24,14 @@
     register: mountpoint_check
     ignore_errors: true
   - name: Create a file system on the logical volume
-    command: mkfs.xfs /dev/vgapp/lvapp
+    command: mkfs.xfs -f /dev/xvdf
   - name: Get the UUID of the EBS volume
     shell: "blkid -o value -s UUID /dev/xvdf"
     register: ebs_uuid
   - name: Add entry to /etc/fstab
     lineinfile:
       path: /etc/fstab
-      line: "UUID={{ ebs_uuid.stdout }} /app xfs defaults 1 2"
+      line: "UUID={{ ebs_uuid.stdout }} /app xfs defaults 0 0"
       create: yes
   - name: Mount the EBS volume using UUID
     mount:
