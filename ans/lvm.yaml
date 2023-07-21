@@ -23,6 +23,7 @@
     mount:
       path: /app
       state: unmounted
+      failed_when: false
       ignore_errors: yes
   - name: Create a file system on the logical volume
     command: mkfs.xfs /dev/vgapp/lvapp
