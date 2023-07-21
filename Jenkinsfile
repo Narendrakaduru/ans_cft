@@ -31,11 +31,12 @@ pipeline {
 		}
 	    stage('Launch CFT') {
             steps {   
-                    sh '''
-                    whoami
-                    ansible-playbook -i /etc/ansible/hosts ${WORKSPACE}/ans/launch_EC2_ANS.yaml --extra-vars "$EXTRA_VARS workdir=$WORKSPACE/$stack_name.txt template=$WORKSPACE/$template"
-                    '''
-            }
+                sh '''
+                whoami
+                ansible-playbook -i /etc/ansible/hosts ${WORKSPACE}/$Ansible_template --extra-vars "$EXTRA_VARS workdir=$WORKSPACE/$stack_name.txt template=$WORKSPACE/$cfn_template"
+                #sleep 30
+                '''
+		    }
         }
         stage('Initialize new server'){
             steps {
